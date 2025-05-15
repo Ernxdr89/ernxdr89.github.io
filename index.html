@@ -102,7 +102,7 @@
     async function verifyPassword() {
       const passwordInput = document.getElementById("password").value;
       const hash = await hashPassword(passwordInput);
-      if (hash === "2bb80d537b1da3e38bd30361aa855686bde0ba95e299d8e9f3c5f3c75b8d66f7") { // hash of "mypassword"
+      if (hash === "021addbbe56fa3e1fbc6c45bd1c464d5") { // hash of "mypassword"
         document.getElementById("add-form").classList.remove("hidden");
         document.getElementById("password-form").classList.add("hidden");
       } else {
