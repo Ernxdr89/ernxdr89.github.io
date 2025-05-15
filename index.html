@@ -3,17 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Software Hub</title>
+  <title>•</title>
   <style>
+    :root {
+      --bg: #121212;
+      --card: #1e1e1e;
+      --text: #ffffff;
+      --accent: #4dabf7;
+      --accent-hover: #1c7ed6;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
       margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    #unlock-screen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: var(--bg);
+    }
+
+    #password {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid var(--accent);
+      color: var(--text);
+      font-size: 20px;
+      text-align: center;
+      outline: none;
+      width: 200px;
+    }
+
+    #app {
+      display: none;
       padding: 20px;
     }
+
     h1 {
       text-align: center;
+      color: var(--accent);
     }
+
+    .form-container {
+      max-width: 400px;
+      margin: 30px auto;
+      background: var(--card);
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    input, button {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+      background: #2a2a2a;
+      color: white;
+      border: 1px solid #444;
+      border-radius: 4px;
+    }
+
+    button {
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: var(--accent-hover);
+    }
+
     .software-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -21,76 +85,64 @@
       max-width: 1000px;
       margin: 0 auto;
     }
+
     .software-card {
-      background: #fff;
-      border: 1px solid #ddd;
+      background: var(--card);
       border-radius: 8px;
       padding: 15px;
       text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     }
+
     .software-card img {
       max-width: 64px;
       height: 64px;
     }
+
     .software-card h2 {
       font-size: 18px;
       margin: 10px 0;
+      color: var(--text);
     }
+
     .software-card a {
       display: inline-block;
       padding: 8px 16px;
-      background-color: #007bff;
+      background-color: var(--accent);
       color: white;
       text-decoration: none;
       border-radius: 5px;
       margin-top: 10px;
     }
+
     .software-card a:hover {
-      background-color: #0056b3;
-    }
-    .form-container {
-      max-width: 400px;
-      margin: 30px auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    input, button {
-      width: 100%;
-      margin-bottom: 10px;
-      padding: 10px;
-      font-size: 16px;
-    }
-    .hidden {
-      display: none;
+      background-color: var(--accent-hover);
     }
   </style>
 </head>
 <body>
 
-  <h1>My Software Downloads</h1>
+  <!-- Hidden Login Page -->
+  <div id="unlock-screen">
+    <input type="password" id="password" placeholder="" autocomplete="off" />
+  </div>
 
-  <div class="form-container">
-    <div id="password-form">
-      <input type="password" id="password" placeholder="Enter password to unlock form">
-      <button onclick="verifyPassword()">Unlock Form</button>
-    </div>
-
-    <div id="add-form" class="hidden">
+  <!-- Main App -->
+  <div id="app">
+    <h1>My Software Downloads</h1>
+    <div class="form-container">
       <input type="text" id="name" placeholder="Software Name">
       <input type="url" id="icon" placeholder="Icon URL">
       <input type="url" id="link" placeholder="Direct Download Link">
       <button onclick="addSoftware()">Add Software</button>
     </div>
+    <div class="software-grid" id="software-list"></div>
   </div>
 
-  <div class="software-grid" id="software-list"></div>
-
   <script>
-    const HASHED_PASSWORD = "021addbbe56fa3e1fbc6c45bd1c464d5"; // MD5 of "secret" (for demo – use SHA-256 in real use)
-    
+    // SHA-256 hash of password: "mypassword"
+    const HASHED_PASSWORD = "f1955f5ae4afd92308e1de91648d412e8dbaa8f7dc9dd6c7bef6fcc877d8a90b";
+
     async function hashPassword(password) {
       const encoder = new TextEncoder();
       const data = encoder.encode(password);
@@ -99,16 +151,21 @@
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    async function verifyPassword() {
-      const passwordInput = document.getElementById("password").value;
-      const hash = await hashPassword(passwordInput);
-      if (hash === "021addbbe56fa3e1fbc6c45bd1c464d5") { // hash of "mypassword"
-        document.getElementById("add-form").classList.remove("hidden");
-        document.getElementById("password-form").classList.add("hidden");
-      } else {
-        alert("Wrong password");
+    async function verifyPassword(event) {
+      if (event.key === "Enter") {
+        const input = document.getElementById("password").value;
+        const hash = await hashPassword(input);
+        if (hash === HASHED_PASSWORD) {
+          document.getElementById("unlock-screen").style.display = "none";
+          document.getElementById("app").style.display = "block";
+          renderSoftware();
+        } else {
+          document.getElementById("password").value = "";
+        }
       }
     }
+
+    document.getElementById("password").addEventListener("keydown", verifyPassword);
 
     function addSoftware() {
       const name = document.getElementById("name").value.trim();
@@ -147,9 +204,6 @@
         container.appendChild(card);
       });
     }
-
-    // On load
-    renderSoftware();
   </script>
 
 </body>
