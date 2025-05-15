@@ -3,224 +3,162 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>•</title>
+  <title>Secure Downloads</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
   <style>
-    :root {
-      --bg: #121212;
-      --card: #1e1e1e;
-      --text: #ffffff;
-      --accent: #4dabf7;
-      --accent-hover: #1c7ed6;
-    }
-
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-
-    #unlock-screen {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background: var(--bg);
     }
 
-    #password {
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid var(--accent);
-      color: var(--text);
-      font-size: 20px;
-      text-align: center;
-      outline: none;
-      width: 200px;
-    }
-
-    #app {
+    #auth, #main {
       display: none;
-      padding: 20px;
-    }
-
-    h1 {
-      text-align: center;
-      color: var(--accent);
-    }
-
-    .form-container {
-      max-width: 400px;
-      margin: 30px auto;
-      background: var(--card);
-      padding: 20px;
-      border-radius: 8px;
-    }
-
-    input, button {
+      flex-direction: column;
+      align-items: center;
       width: 100%;
-      margin-bottom: 10px;
-      padding: 10px;
-      font-size: 16px;
-      background: #2a2a2a;
-      color: white;
-      border: 1px solid #444;
-      border-radius: 4px;
     }
 
-    button {
-      background: var(--accent);
+    #auth.active, #main.active {
+      display: flex;
+    }
+
+    input {
+      background: #1e1e1e;
       border: none;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: var(--accent-hover);
-    }
-
-    .software-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .software-card {
-      background: var(--card);
-      border-radius: 8px;
-      padding: 15px;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    }
-
-    .software-card img {
-      max-width: 64px;
-      height: 64px;
-    }
-
-    .software-card h2 {
+      border-bottom: 2px solid #444;
+      color: #fff;
+      padding: 10px;
+      margin: 10px;
       font-size: 18px;
-      margin: 10px 0;
-      color: var(--text);
+      outline: none;
+      width: 300px;
     }
 
-    .software-card a {
-      display: inline-block;
-      padding: 8px 16px;
-      background-color: var(--accent);
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      margin-top: 10px;
+    #entries {
+      margin-top: 20px;
+      width: 90%;
+      max-width: 600px;
     }
 
-    .software-card a:hover {
-      background-color: var(--accent-hover);
+    .entry {
+      display: flex;
+      align-items: center;
+      background: #1f1f1f;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .entry:hover {
+      background: #2a2a2a;
+    }
+
+    .entry img {
+      width: 32px;
+      height: 32px;
+      margin-right: 12px;
+    }
+
+    .entry span {
+      flex: 1;
     }
   </style>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js"></script>
 </head>
 <body>
 
-  <!-- Unlock Screen -->
-  <div id="unlock-screen">
-    <input type="password" id="password" placeholder="" autocomplete="off" />
-  </div>
+<div id="auth" class="active">
+  <input type="password" id="passwordInput" placeholder="Enter password" autofocus>
+</div>
 
-  <!-- Main App -->
-  <div id="app">
-    <h1>My Software Downloads</h1>
-    <div class="form-container">
-      <input type="text" id="name" placeholder="Software Name">
-      <input type="url" id="icon" placeholder="Icon URL">
-      <input type="url" id="link" placeholder="Direct Download Link">
-      <button onclick="addSoftware()">Add Software</button>
-    </div>
-    <div class="software-grid" id="software-list"></div>
-  </div>
+<div id="main">
+  <input type="text" id="entryName" placeholder="Software name">
+  <input type="url" id="entryURL" placeholder="Download URL">
+  <input type="url" id="entryIcon" placeholder="Icon URL (optional)">
+  <div id="entries"></div>
+</div>
 
-  <script>
-    // Your Firebase Configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyAuhu-d3MsO1NksUvret60yR11now6Ul04",
-      authDomain: "github-page-86bdc.firebaseapp.com",
-      projectId: "github-page-86bdc",
-      storageBucket: "github-page-86bdc.appspot.com",
-      messagingSenderId: "1066296283146",
-      appId: "1:1066296283146:web:79642f61536aaf40658ff3"
-    };
+<script>
+  const PASSWORD_HASH = 'f1955f5ae4afd92308e1de91648d412e8dbaa8f7dc9dd6c7bef6fcc877d8a90b';
+  const AUTH_KEY = 'shared-secret-key'; // match Firestore rule
 
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyAuhu-d3MsO1NksUvret60yR11now6Ul04",
+    authDomain: "github-page-86bdc.firebaseapp.com",
+    projectId: "github-page-86bdc",
+    storageBucket: "github-page-86bdc.appspot.com",
+    messagingSenderId: "1066296283146",
+    appId: "1:1066296283146:web:79642f61536aaf40658ff3"
+  };
 
-    const HASHED_PASSWORD = "607813bb6cc4b76e6b30a8c4de0cf7d9";
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 
-    async function hashPassword(password) {
-      const encoder = new TextEncoder();
-      const data = encoder.encode(password);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
+  const passwordInput = document.getElementById('passwordInput');
+  const authDiv = document.getElementById('auth');
+  const mainDiv = document.getElementById('main');
+  const entryName = document.getElementById('entryName');
+  const entryURL = document.getElementById('entryURL');
+  const entryIcon = document.getElementById('entryIcon');
+  const entriesDiv = document.getElementById('entries');
 
-    async function verifyPassword(event) {
-      if (event.key === "Enter") {
-        const input = document.getElementById("password").value;
-        const hash = await hashPassword(input);
-        if (hash === HASHED_PASSWORD) {
-          document.getElementById("unlock-screen").style.display = "none";
-          document.getElementById("app").style.display = "block";
-          renderSoftware();
-        } else {
-          document.getElementById("password").value = "";
-        }
+  async function hashSHA256(str) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(str);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  passwordInput.addEventListener('keypress', async (e) => {
+    if (e.key === 'Enter') {
+      const hash = await hashSHA256(passwordInput.value);
+      if (hash === PASSWORD_HASH) {
+        authDiv.classList.remove('active');
+        mainDiv.classList.add('active');
+        loadEntries();
+      } else {
+        passwordInput.value = '';
+        passwordInput.placeholder = 'Wrong password!';
       }
     }
+  });
 
-    document.getElementById("password").addEventListener("keydown", verifyPassword);
-
-    async function addSoftware() {
-      const name = document.getElementById("name").value.trim();
-      const icon = document.getElementById("icon").value.trim();
-      const link = document.getElementById("link").value.trim();
-
-      if (!name || !icon || !link) {
-        alert("Please fill out all fields.");
-        return;
-      }
-
-      await db.collection("software").add({ name, icon, link });
-
-      document.getElementById("name").value = "";
-      document.getElementById("icon").value = "";
-      document.getElementById("link").value = "";
-
-      renderSoftware();
-    }
-
-    async function renderSoftware() {
-      const container = document.getElementById("software-list");
-      container.innerHTML = "";
-
-      const snapshot = await db.collection("software").get();
-      snapshot.forEach(doc => {
-        const software = doc.data();
-        const card = document.createElement("div");
-        card.className = "software-card";
-        card.innerHTML = `
-          <img src="${software.icon}" alt="Icon">
-          <h2>${software.name}</h2>
-          <a href="${software.link}" download>Download</a>
-        `;
-        container.appendChild(card);
+  entryURL.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && entryName.value && entryURL.value) {
+      db.collection("entries").add({
+        name: entryName.value,
+        url: entryURL.value,
+        icon: entryIcon.value || '',
+        authKey: AUTH_KEY
       });
+      entryName.value = '';
+      entryURL.value = '';
+      entryIcon.value = '';
     }
-  </script>
+  });
 
-</body>
-</html>
+  function loadEntries() {
+    db.collection("entries")
+      .where("authKey", "==", AUTH_KEY)
+      .onSnapshot((snapshot) => {
+        entriesDiv.innerHTML = '';
+        snapshot.forEach(doc => {
+          const { name, url, icon } = doc.data();
+          const div = document.createElement('div');
+          div.className = 'entry';
+          div.innerHTML = `
+            <img src="${icon || 'https://via.placeholder.com/32'}" alt="icon">
+            <span>${name}</span>
+          `;
+          div.addEventListener('click', () => window.location.href = url);
+          entriesDiv.appendChild(div);
+        });
