@@ -1,128 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ernxdr89's GitHub Page</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-  :root {
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
-    --primary-color: #bb86fc;
-    --secondary-color: #03dac6;
-    --link-color: #8ab4f8;
-    --shadow-color: rgba(0,0,0,0.7);
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ernxdr89's GitHub Page</title>
+  <script src="https://cdn.jsdelivr.net/npm/js-sha256@0.9.0/src/sha256.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+    :root {
+      --bg-color: #121212;
+      --text-color: #e0e0e0;
+      --primary-color: #bb86fc;
+      --secondary-color: #03dac6;
+      --link-color: #8ab4f8;
+      --shadow-color: rgba(0,0,0,0.7);
+    }
 
-  * {
-    box-sizing: border-box;
-  }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    line-height: 1.6;
-    display: flex;
-    justify-content: center;
-    padding: 2rem;
-    min-height: 100vh;
-  }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
 
-  main {
-    max-width: 800px;
-    width: 100%;
-    background: #1e1e1e;
-    padding: 2.5rem 3rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px var(--shadow-color);
-  }
+    #password-screen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 500px;
+      padding: 2rem;
+      text-align: center;
+    }
 
-  h1 {
-    font-weight: 700;
-    font-size: 2.5rem;
-    margin-bottom: 0.25rem;
-    color: var(--primary-color);
-    text-align: center;
-  }
+    #password-input {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 1rem 0;
+      border: 2px solid #444;
+      border-radius: 8px;
+      background-color: #292929;
+      color: var(--text-color);
+      font-family: inherit;
+      font-size: 1rem;
+    }
 
-  p.lead {
-    text-align: center;
-    font-size: 1.1rem;
-    color: #bbb;
-    margin-bottom: 2.5rem;
-  }
+    #password-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
 
-  h2 {
-    border-bottom: 2px solid var(--primary-color);
-    padding-bottom: 0.3rem;
-    margin-bottom: 1rem;
-    font-weight: 700;
-  }
+    #main-content {
+      max-width: 800px;
+      width: 100%;
+      background: #1e1e1e;
+      padding: 2.5rem 3rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px var(--shadow-color);
+      display: none;
+    }
 
-  .project {
-    background: #292929;
-    padding: 1rem 1.25rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    transition: background-color 0.3s ease;
-  }
+    h1 {
+      font-weight: 700;
+      font-size: 2.5rem;
+      margin-bottom: 0.25rem;
+      color: var(--primary-color);
+      text-align: center;
+    }
 
-  .project:hover {
-    background-color: #3a3a3a;
-  }
+    p.lead {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #bbb;
+      margin-bottom: 2.5rem;
+    }
 
-  .project h3 {
-    margin: 0 0 0.3rem 0;
-    font-weight: 600;
-    color: var(--secondary-color);
-  }
+    h2 {
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 0.3rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
 
-  .project h3 a {
-    color: var(--secondary-color);
-    text-decoration: none;
-  }
+    .project {
+      background: #292929;
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      transition: background-color 0.3s ease;
+    }
 
-  .project h3 a:hover {
-    text-decoration: underline;
-  }
+    .project:hover {
+      background-color: #3a3a3a;
+    }
 
-  ul.skills {
-    list-style: none;
-    padding-left: 0;
-    margin-top: 0;
-  }
+    .project h3 {
+      margin: 0 0 0.3rem 0;
+      font-weight: 600;
+      color: var(--secondary-color);
+    }
 
-  ul.skills li {
-    padding: 0.4rem 0;
-    border-bottom: 1px solid #333;
-  }
+    .project h3 a {
+      color: var(--secondary-color);
+      text-decoration: none;
+    }
 
-  ul.skills li:last-child {
-    border-bottom: none;
-  }
+    .project h3 a:hover {
+      text-decoration: underline;
+    }
 
-  footer {
-    margin-top: 3rem;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #777;
-  }
+    ul.skills {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 0;
+    }
 
-  footer a {
-    color: var(--link-color);
-    text-decoration: none;
-  }
+    ul.skills li {
+      padding: 0.4rem 0;
+      border-bottom: 1px solid #333;
+    }
 
-  footer a:hover {
-    text-decoration: underline;
-  }
-</style>
+    ul.skills li:last-child {
+      border-bottom: none;
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #777;
+    }
+
+    footer a {
+      color: var(--link-color);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-  <main>
+  <div id="password-screen">
+    <h1>Welcome</h1>
+    <p>Please enter your password to access the content</p>
+    <input type="password" id="password-input" placeholder="Enter password...">
+  </div>
+
+  <main id="main-content">
     <h1>Welcome to Ernxdr89's GitHub Page</h1>
     <p class="lead">Developer and modding enthusiast. Exploring the depths of game customization and automation.</p>
 
@@ -152,5 +188,29 @@
       <p>Check out my GitHub profile: <a href="https://github.com/Ernxdr89" target="_blank" rel="noopener noreferrer">github.com/Ernxdr89</a></p>
     </footer>
   </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const passwordInput = document.getElementById('password-input');
+      const mainContent = document.getElementById('main-content');
+      const passwordScreen = document.getElementById('password-screen');
+      const correctPasswordHash = 'f1955f5ae4afd92308e1de91648d412e8dbaa8f7dc9dd6c7bef6fcc877d8a90b';
+
+      passwordInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          const enteredPassword = passwordInput.value;
+          const enteredPasswordHash = sha256(enteredPassword);
+
+          if (enteredPasswordHash === correctPasswordHash) {
+            passwordScreen.style.display = 'none';
+            mainContent.style.display = 'block';
+          } else {
+            alert('Incorrect password. Please try again.');
+            passwordInput.value = '';
+          }
+        }
+      });
+    });
+  </script>
 </body>
 </html>
