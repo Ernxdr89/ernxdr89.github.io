@@ -29,6 +29,7 @@
     justify-content: center;
     padding: 2rem;
     min-height: 100vh;
+    flex-direction: column;
   }
 
   main {
@@ -38,6 +39,7 @@
     padding: 2.5rem 3rem;
     border-radius: 12px;
     box-shadow: 0 8px 24px var(--shadow-color);
+    margin-bottom: 2rem;
   }
 
   h1 {
@@ -105,7 +107,6 @@
   }
 
   footer {
-    margin-top: 3rem;
     text-align: center;
     font-size: 0.9rem;
     color: #777;
@@ -119,10 +120,63 @@
   footer a:hover {
     text-decoration: underline;
   }
+
+  /* Invisible input styles */
+  #passwordInput {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    width: 200px;
+    height: 30px;
+    border: none;
+    background: transparent;
+    color: transparent;
+    caret-color: transparent;
+    outline: none;
+    pointer-events: auto; /* keep focusable */
+  }
+
+  /* Real page section is hidden by default */
+  #realPage {
+    display: none;
+    background: #222;
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px var(--shadow-color);
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto 2rem auto;
+    color: var(--text-color);
+  }
+
+  #realPage h2 {
+    border-bottom: 2px solid var(--secondary-color);
+  }
+
+  #realPage ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  #realPage ul li {
+    margin: 0.5rem 0;
+  }
+
+  #realPage ul li a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  #realPage ul li a:hover {
+    text-decoration: underline;
+  }
 </style>
 </head>
 <body>
-  <main>
+  <main id="publicPage">
     <h1>Welcome to Ernxdr89's GitHub Page</h1>
     <p class="lead">Developer and modding enthusiast. Exploring the depths of game customization and automation.</p>
 
@@ -152,5 +206,67 @@
       <p>Check out my GitHub profile: <a href="https://github.com/Ernxdr89" target="_blank" rel="noopener noreferrer">github.com/Ernxdr89</a></p>
     </footer>
   </main>
+
+  <section id="realPage" aria-hidden="true">
+    <h2>🔐 Secret Tools</h2>
+    <ul>
+      <li><a href="https://github.com/Ernxdr89/Start_Menu_Shortcut_Creator" target="_blank" rel="noopener noreferrer">Start Menu Shortcut Creator Repo</a></li>
+      <li><a href="https://github.com/Ernxdr89/PCBS2ModdingTools" target="_blank" rel="noopener noreferrer">PC Building Simulator 2 Modding Tools Repo</a></li>
+      <li><a href="https://github.com/Ernxdr89/AnotherTool" target="_blank" rel="noopener noreferrer">Another Secret Tool</a></li>
+    </ul>
+  </section>
+
+  <input
+    id="passwordInput"
+    type="password"
+    placeholder="Enter password"
+    aria-label="Password input"
+    autocomplete="off"
+    spellcheck="false"
+  />
+
+<script>
+  const passwordHash = 'f1955f5ae4afd92308e1de91648d412e8dbaa8f7dc9dd6c7bef6fcc877d8a90b';
+
+  async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  const input = document.getElementById('passwordInput');
+  const realPage = document.getElementById('realPage');
+  const publicPage = document.getElementById('publicPage');
+
+  input.addEventListener('input', async () => {
+    const val = input.value.trim();
+    if(val.length === 0) {
+      realPage.style.display = 'none';
+      publicPage.style.display = 'block';
+      document.body.style.backgroundColor = 'var(--bg-color)';
+      return;
+    }
+    const hash = await sha256(val);
+    if(hash === passwordHash) {
+      // Show real page
+      realPage.style.display = 'block';
+      publicPage.style.display = 'none';
+      // Clear and blur input for security
+      input.value = '';
+      input.blur();
+      // Optionally remove the input or keep it invisible for future use
+    } else {
+      // Keep hidden if wrong password
+      realPage.style.display = 'none';
+      publicPage.style.display = 'block';
+    }
+  });
+
+  // Optionally autofocus on page load for ease of use
+  window.addEventListener('load', () => {
+    input.focus();
+  });
+</script>
 </body>
 </html>
