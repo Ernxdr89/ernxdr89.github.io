@@ -1,164 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Secure Downloads</title>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #121212;
-      color: #e0e0e0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    #auth, #main {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-    }
-
-    #auth.active, #main.active {
-      display: flex;
-    }
-
-    input {
-      background: #1e1e1e;
-      border: none;
-      border-bottom: 2px solid #444;
-      color: #fff;
-      padding: 10px;
-      margin: 10px;
-      font-size: 18px;
-      outline: none;
-      width: 300px;
-    }
-
-    #entries {
-      margin-top: 20px;
-      width: 90%;
-      max-width: 600px;
-    }
-
-    .entry {
-      display: flex;
-      align-items: center;
-      background: #1f1f1f;
-      padding: 12px;
-      margin: 8px 0;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .entry:hover {
-      background: #2a2a2a;
-    }
-
-    .entry img {
-      width: 32px;
-      height: 32px;
-      margin-right: 12px;
-    }
-
-    .entry span {
-      flex: 1;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Ernxdr89's GitHub Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f4f4f4; }
+        h1 { color: #333; }
+        a { color: #0366d6; text-decoration: none; }
+        .project { margin-bottom: 20px; }
+    </style>
 </head>
 <body>
+    <h1>Welcome to Ernxdr89's GitHub Page</h1>
+    <p>Developer and modding enthusiast. Exploring the depths of game customization and automation.</p>
 
-<div id="auth" class="active">
-  <input type="password" id="passwordInput" placeholder="Enter password" autofocus>
-</div>
+    <h2>Projects</h2>
+    <div class="project">
+        <h3><a href="https://github.com/Ernxdr89/Start_Menu_Shortcut_Creator">Start Menu Shortcut Creator</a></h3>
+        <p>A Python tool to create Start Menu shortcuts.</p>
+    </div>
 
-<div id="main">
-  <input type="text" id="entryName" placeholder="Software name">
-  <input type="url" id="entryURL" placeholder="Download URL">
-  <input type="url" id="entryIcon" placeholder="Icon URL (optional)">
-  <div id="entries"></div>
-</div>
+    <div class="project">
+        <h3><a href="https://www.nexusmods.com/pcbuildingsimulator2/mods/55?tab=posts">PC Building Simulator 2 Modding Tools</a></h3>
+        <p>Contributions to modding tools and discussions on Nexus Mods forums.</p>
+    </div>
 
-<script>
-  const PASSWORD_HASH = 'f1955f5ae4afd92308e1de91648d412e8dbaa8f7dc9dd6c7bef6fcc877d8a90b';
-  const AUTH_KEY = 'shared-secret-key'; // match Firestore rule
+    <h2>Skills</h2>
+    <ul>
+        <li>Languages: Python, C++, HTML</li>
+        <li>Tools: Visual Studio, vcpkg, UABE, Il2CppDumper</li>
+        <li>Interests: Game modding, scripting, automation</li>
+    </ul>
 
-  // Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyAuhu-d3MsO1NksUvret60yR11now6Ul04",
-    authDomain: "github-page-86bdc.firebaseapp.com",
-    projectId: "github-page-86bdc",
-    storageBucket: "github-page-86bdc.appspot.com",
-    messagingSenderId: "1066296283146",
-    appId: "1:1066296283146:web:79642f61536aaf40658ff3"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  const passwordInput = document.getElementById('passwordInput');
-  const authDiv = document.getElementById('auth');
-  const mainDiv = document.getElementById('main');
-  const entryName = document.getElementById('entryName');
-  const entryURL = document.getElementById('entryURL');
-  const entryIcon = document.getElementById('entryIcon');
-  const entriesDiv = document.getElementById('entries');
-
-  async function hashSHA256(str) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(str);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-  }
-
-  passwordInput.addEventListener('keypress', async (e) => {
-    if (e.key === 'Enter') {
-      const hash = await hashSHA256(passwordInput.value);
-      if (hash === PASSWORD_HASH) {
-        authDiv.classList.remove('active');
-        mainDiv.classList.add('active');
-        loadEntries();
-      } else {
-        passwordInput.value = '';
-        passwordInput.placeholder = 'Wrong password!';
-      }
-    }
-  });
-
-  entryURL.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' && entryName.value && entryURL.value) {
-      db.collection("entries").add({
-        name: entryName.value,
-        url: entryURL.value,
-        icon: entryIcon.value || '',
-        authKey: AUTH_KEY
-      });
-      entryName.value = '';
-      entryURL.value = '';
-      entryIcon.value = '';
-    }
-  });
-
-  function loadEntries() {
-    db.collection("entries")
-      .where("authKey", "==", AUTH_KEY)
-      .onSnapshot((snapshot) => {
-        entriesDiv.innerHTML = '';
-        snapshot.forEach(doc => {
-          const { name, url, icon } = doc.data();
-          const div = document.createElement('div');
-          div.className = 'entry';
-          div.innerHTML = `
-            <img src="${icon || 'https://via.placeholder.com/32'}" alt="icon">
-            <span>${name}</span>
-          `;
-          div.addEventListener('click', () => window.location.href = url);
-          entriesDiv.appendChild(div);
-        });
+    <p>Check out my GitHub profile: <a href="https://github.com/Ernxdr89">github.com/Ernxdr89</a></p>
+</body>
+</html>
