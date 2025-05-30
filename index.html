@@ -1,37 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Ernxdr89's GitHub Page</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f4f4f4; }
-        h1 { color: #333; }
-        a { color: #0366d6; text-decoration: none; }
-        .project { margin-bottom: 20px; }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ernxdr89's GitHub Page</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+  :root {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --primary-color: #bb86fc;
+    --secondary-color: #03dac6;
+    --link-color: #8ab4f8;
+    --shadow-color: rgba(0,0,0,0.7);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    min-height: 100vh;
+  }
+
+  main {
+    max-width: 800px;
+    width: 100%;
+    background: #1e1e1e;
+    padding: 2.5rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px var(--shadow-color);
+  }
+
+  h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 0.25rem;
+    color: var(--primary-color);
+    text-align: center;
+  }
+
+  p.lead {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #bbb;
+    margin-bottom: 2.5rem;
+  }
+
+  h2 {
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.3rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  .project {
+    background: #292929;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    transition: background-color 0.3s ease;
+  }
+
+  .project:hover {
+    background-color: #3a3a3a;
+  }
+
+  .project h3 {
+    margin: 0 0 0.3rem 0;
+    font-weight: 600;
+    color: var(--secondary-color);
+  }
+
+  .project h3 a {
+    color: var(--secondary-color);
+    text-decoration: none;
+  }
+
+  .project h3 a:hover {
+    text-decoration: underline;
+  }
+
+  ul.skills {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0;
+  }
+
+  ul.skills li {
+    padding: 0.4rem 0;
+    border-bottom: 1px solid #333;
+  }
+
+  ul.skills li:last-child {
+    border-bottom: none;
+  }
+
+  footer {
+    margin-top: 3rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #777;
+  }
+
+  footer a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+</style>
 </head>
 <body>
+  <main>
     <h1>Welcome to Ernxdr89's GitHub Page</h1>
-    <p>Developer and modding enthusiast. Exploring the depths of game customization and automation.</p>
+    <p class="lead">Developer and modding enthusiast. Exploring the depths of game customization and automation.</p>
 
-    <h2>Projects</h2>
-    <div class="project">
-        <h3><a href="https://github.com/Ernxdr89/Start_Menu_Shortcut_Creator">Start Menu Shortcut Creator</a></h3>
+    <section>
+      <h2>Projects</h2>
+      <div class="project">
+        <h3><a href="https://github.com/Ernxdr89/Start_Menu_Shortcut_Creator" target="_blank" rel="noopener noreferrer">Start Menu Shortcut Creator</a></h3>
         <p>A Python tool to create Start Menu shortcuts.</p>
-    </div>
+      </div>
 
-    <div class="project">
-        <h3><a href="https://www.nexusmods.com/pcbuildingsimulator2/mods/55?tab=posts">PC Building Simulator 2 Modding Tools</a></h3>
+      <div class="project">
+        <h3><a href="https://www.nexusmods.com/pcbuildingsimulator2/mods/55?tab=posts" target="_blank" rel="noopener noreferrer">PC Building Simulator 2 Modding Tools</a></h3>
         <p>Contributions to modding tools and discussions on Nexus Mods forums.</p>
-    </div>
+      </div>
+    </section>
 
-    <h2>Skills</h2>
-    <ul>
+    <section>
+      <h2>Skills</h2>
+      <ul class="skills">
         <li>Languages: Python, C++, HTML</li>
         <li>Tools: Visual Studio, vcpkg, UABE, Il2CppDumper</li>
         <li>Interests: Game modding, scripting, automation</li>
-    </ul>
+      </ul>
+    </section>
 
-    <p>Check out my GitHub profile: <a href="https://github.com/Ernxdr89">github.com/Ernxdr89</a></p>
+    <footer>
+      <p>Check out my GitHub profile: <a href="https://github.com/Ernxdr89" target="_blank" rel="noopener noreferrer">github.com/Ernxdr89</a></p>
+    </footer>
+  </main>
 </body>
 </html>
