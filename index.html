@@ -32,42 +32,13 @@
       min-height: 100vh;
     }
 
-    #password-screen {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      max-width: 500px;
-      padding: 2rem;
-      text-align: center;
-    }
-
-    #password-input {
-      width: 100%;
-      padding: 0.8rem;
-      margin: 1rem 0;
-      border: 2px solid #444;
-      border-radius: 8px;
-      background-color: #292929;
-      color: var(--text-color);
-      font-family: inherit;
-      font-size: 1rem;
-    }
-
-    #password-input:focus {
-      outline: none;
-      border-color: var(--primary-color);
-    }
-
-    #main-content {
+    main {
       max-width: 800px;
       width: 100%;
       background: #1e1e1e;
       padding: 2.5rem 3rem;
       border-radius: 12px;
       box-shadow: 0 8px 24px var(--shadow-color);
-      display: none;
     }
 
     h1 {
@@ -149,16 +120,28 @@
     footer a:hover {
       text-decoration: underline;
     }
+
+    #password-input {
+      position: fixed;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      border: 0;
+    }
+
+    #hidden-content {
+      display: none;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid #333;
+    }
   </style>
 </head>
 <body>
-  <div id="password-screen">
-    <h1>Welcome</h1>
-    <p>Please enter your password to access the content</p>
-    <input type="password" id="password-input" placeholder="Enter password...">
-  </div>
-
-  <main id="main-content">
+  <main>
     <h1>Welcome to Ernxdr89's GitHub Page</h1>
     <p class="lead">Developer and modding enthusiast. Exploring the depths of game customization and automation.</p>
 
@@ -184,16 +167,34 @@
       </ul>
     </section>
 
+    <!-- Invisible password input -->
+    <input type="password" id="password-input" placeholder="Enter password...">
+
+    <!-- Hidden content that will be revealed after correct password -->
+    <section id="hidden-content">
+      <h2>Developer Tools</h2>
+      <p>This is the hidden content that appears after entering the correct password.</p>
+      <!-- Add your tools content here -->
+      <div class="placeholder-tool">
+        <h3>Tool 1</h3>
+        <p>Description of tool 1</p>
+      </div>
+      <div class="placeholder-tool">
+        <h3>Tool 2</h3>
+        <p>Description of tool 2</p>
+      </div>
+    </section>
+
     <footer>
       <p>Check out my GitHub profile: <a href="https://github.com/Ernxdr89" target="_blank" rel="noopener noreferrer">github.com/Ernxdr89</a></p>
+      <p>Press 'Tab' to focus the invisible password field, then type your password and press Enter.</p>
     </footer>
   </main>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const passwordInput = document.getElementById('password-input');
-      const mainContent = document.getElementById('main-content');
-      const passwordScreen = document.getElementById('password-screen');
+      const hiddenContent = document.getElementById('hidden-content');
       const correctPasswordHash = 'f1955f5ae4afd92308e1de91648d412e8dbaa8f7dc9dd6c7bef6fcc877d8a90b';
 
       passwordInput.addEventListener('keypress', function(e) {
@@ -202,8 +203,8 @@
           const enteredPasswordHash = sha256(enteredPassword);
 
           if (enteredPasswordHash === correctPasswordHash) {
-            passwordScreen.style.display = 'none';
-            mainContent.style.display = 'block';
+            hiddenContent.style.display = 'block';
+            passwordInput.value = '';
           } else {
             alert('Incorrect password. Please try again.');
             passwordInput.value = '';
